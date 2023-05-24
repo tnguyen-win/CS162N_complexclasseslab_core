@@ -1,67 +1,93 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 using CardClasses;
 
-namespace CardTests
-{
-    class Program
-    {
-        static void Main(string[] args)
-        {
-            //TestDeckConstructor();
-            //TestDeckShuffle();
-            //TestDeckDeal();
+namespace CardTests {
+	class Program {
+		static void Main() {
+			//get its number of dominos remaining
+			GetRemainingDominoes();
+			Console.WriteLine("\n");
+			//get a domino based on its position in the boneyard
+			GetDominoByIndex();
+			Console.WriteLine("\n");
+			//change the domino object in a specific position in the boneyard
+			ChangeDominoAtIndex();
+			Console.WriteLine("\n");
+			//draw or deal a domino from the top of the boneyard
+			DrawOrDealDomino();
+			Console.WriteLine("\n");
+			//get whether it is empty or not
+			CheckIfBoneYardIsEmpty();
+			Console.WriteLine("\n");
+			//shuffle itself
+			ShuffleBoneYard();
+			Console.WriteLine("\n");
+			//convert its attributes to a string for displaying on the screen
+			DisplayDominoAttributes();
+			Console.WriteLine("");
+		}
 
-            Console.ReadLine();
-        }
+		static void GetRemainingDominoes() {
+			BoneYard bY = new();
 
-        static void TestDeckConstructor()
-        {
-            Deck d = new Deck();
+			Console.WriteLine("[Get Remaining Dominoes]");
+			Console.WriteLine("Expected [52].");
+			Console.WriteLine($"Got [{bY.NumCards}].");
+		}
 
-            Console.WriteLine("Testing deck of cards default constructor");
-            Console.WriteLine("NumCards.  Expecting 52. " + d.NumCards);
-            Console.WriteLine("IsEmpty.   Expecting false. " + d.IsEmpty);
-            Console.WriteLine("ToString.  Expect a ton of cards in order.\n" + d.ToString());
-            Console.WriteLine();
-        }
+		static void GetDominoByIndex() {
+			BoneYard bY = new();
 
-        static void TestDeckShuffle()
-        {
-            Deck d = new Deck();
-            d.Shuffle();
-            Console.WriteLine("Testing deck of cards shuffle");
-            Console.WriteLine("NumCards.  Expecting 52. " + d.NumCards);
-            Console.WriteLine("IsEmpty.   Expecting false. " + d.IsEmpty);
-            Console.WriteLine("First Card will rarely be the Ace of Clubs. " + d[0]);
-            Console.WriteLine("ToString.  Expect a ton of cards in shuffled order.\n" + d.ToString());
-            Console.WriteLine();
-        }
+			Console.WriteLine("[Get Domino By Index]");
+			Console.WriteLine("Expected [Suit: [6] Value: [2]].");
+			Console.WriteLine($"Got [{bY[21]}].");
+		}
 
-        static void TestDeckDeal()
-        {
-            Deck d = new Deck();
-            Card c = d.Deal();
+		static void ChangeDominoAtIndex() {
+			BoneYard bY = new();
 
-            Console.WriteLine("Testing deck of cards deal");
-            Console.WriteLine("NumCards.  Expecting 51. " + d.NumCards);
-            Console.WriteLine("IsEmpty.   Expecting false. " + d.IsEmpty);
-            Console.WriteLine("Dealt Card should be Ace of Clubs. " + c);
+			bY[21].Suit = 4;
+			bY[21].Value = 13;
 
-            // now let's deal them all and see what happens at the end
-            for (int i = 1; i <= 51; i++)
-                c = d.Deal();
-            Console.WriteLine("Dealt all 52 cards");
-            Console.WriteLine("NumCards.  Expecting 0. " + d.NumCards);
-            Console.WriteLine("IsEmpty.   Expecting true. " + d.IsEmpty);
-            Console.WriteLine("Last Card should be King of Spades. " + c);
-            Console.WriteLine("Dealing again should return null. Expecting true. " + (d.Deal() == null));
+			Console.WriteLine("[Change Domino At Index]");
+			Console.WriteLine("Expected [Suit: [4] Value: [13]].");
+			Console.WriteLine($"Got [{bY[21]}].");
+		}
 
-            Console.WriteLine();
-        }
-    }
+		static void DrawOrDealDomino() {
+			BoneYard bY = new();
+
+			Console.WriteLine("[Draw Or Deal Domino]");
+			Console.WriteLine("Expected [Suit: [1] Value: [1]].");
+			Console.WriteLine($"Got [{bY.Deal()}].");
+		}
+
+		static void CheckIfBoneYardIsEmpty() {
+			BoneYard bY = new();
+
+			Console.WriteLine("[Check If Bone Yard Is Empty]");
+			Console.WriteLine("Expected [False].");
+			Console.WriteLine($"Got [{bY.IsEmpty}].");
+		}
+
+		static void ShuffleBoneYard() {
+			BoneYard bY = new();
+
+			bY.Shuffle();
+
+			Console.WriteLine("[Shuffle Bone Yard]");
+			Console.WriteLine("Expected a RANDOMLY generated bone yard list. Results should vary per program run.");
+			Console.WriteLine($"Got [{bY}].");
+		}
+
+		static void DisplayDominoAttributes() {
+			BoneYard bY = new();
+
+			Console.WriteLine("[Display Domino Attributes]");
+			Console.WriteLine("Expected [Suit: [1] Value: [1]\nSuit: [1] Value: [2]\nSuit: [1] Value: [3]].");
+			Console.Write("Got [");
+			for (var i = 0; i < bY.GetType().GetProperties().Length; i++) Console.WriteLine($"{bY[i]}");
+			Console.WriteLine("].");
+		}
+	}
 }
