@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Customers>
+    <Customer>
+        <Id>1</Id>
+        <Email>fake1@gmail.com</Email>
+        <FirstName>john1</FirstName>
+        <LastName>smith1</LastName>
+        <Phone>541-123-123</Phone>
+    </Customer>
+    <Customer>
+        <Id>2</Id>
+        <Email>fake2@gmail.com</Email>
+        <FirstName>john2</FirstName>
+        <LastName>smith2</LastName>
+        <Phone>541-456-456</Phone>
+    </Customer>
+    <Customer>
+        <Id>3</Id>
+        <Email>fake3@gmail.com</Email>
+        <FirstName>john3</FirstName>
+        <LastName>smith3</LastName>
+        <Phone>541-789-789</Phone>
+    </Customer>
+</Customers>

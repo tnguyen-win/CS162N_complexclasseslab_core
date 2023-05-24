@@ -1,166 +1,231 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 using CustomerProductClasses;
 
-namespace CustomerProductListTests
-{
-    class Program
-    {
-        static void Main(string[] args)
-        {
-            Console.SetWindowSize(120, 40);
-            //TestProductListConstructor();
-            //TestProductListAdd();
-            //TestProductListSaveAndFill();
-            //TestProductListRemove();
-            //TestProductEquals();
-            //TestProductGetHashCode();
-            //TestProductEqualityOperator();
-            //TestProductInequalityOperator();
-            TestProductListIndexer();
+namespace CustomerProductListTests {
+	class Program {
+		static void Main() {
+			/* USE AT OWN RISK - I discovered that low window size values can cause unexpected text wrapping with the logs */
+			//if (OperatingSystem.IsWindows()) Console.SetWindowSize(120, 40);
 
-            Console.ReadLine();
-        }
+			// get its count
+			GetCustomersCount();
+			Console.WriteLine("\n");
+			// get a customer based on its position in the list
+			GetCustomerAtIndex();
+			Console.WriteLine("\n");
+			// change the customer object in a specific position in the list
+			ChangeCustomerAtIndex();
+			Console.WriteLine("\n");
+			// get a customer based on its email address
+			GetCustomerFromEmail();
+			Console.WriteLine("\n");
+			// add a customer object
+			AddCustomerToList();
+			Console.WriteLine("\n");
+			// add a customer given the individual attributes of a customer
+			AddCustomerWithIndividualAttributes();
+			Console.WriteLine("\n");
+			// add a customer object using the + operator
+			AddCustomerOperatorPlus();
+			Console.WriteLine("\n");
+			// save its contents to an xml file
+			SaveCustomers();
+			Console.WriteLine("\n");
+			// fill its contents from the same xml file
+			LoadCustomers();
+			Console.WriteLine("\n");
+			// remove a customer based on a customer object
+			RemoveCustomer();
+			Console.WriteLine("\n");
+			// remove a customer using the - operator
+			RemoveCustomerOperatorMinus();
+			Console.WriteLine("\n");
+			// convert its attributes to a string for displaying on the screen
+			DisplayCustomerAttributes();
+			Console.WriteLine("");
+		}
 
-        static void TestProductListConstructor()
-        {
-            ProductList list = new ProductList();
+		static void GetCustomersCount() {
+			Customer customer1 = new();
+			Customer customer2 = new();
+			Customer customer3 = new();
+			CustomerList customerList = new();
 
-            Console.WriteLine("Testing product list default constructor");
-            Console.WriteLine("Count.  Expecting 0. " + list.Count);
-            Console.WriteLine("ToString.  Expect an empty string. " + list.ToString());
-            Console.WriteLine();
-        }
+			customerList.Add(customer1);
+			customerList.Add(customer2);
+			customerList.Add(customer3);
 
-        static void TestProductListAdd()
-        {
-            ProductList list = new ProductList();
-            Product p1 = new Product(1, "T100", "This is a test product", 100M, 10);
-            Product p2 = new Product(2, "T200", "This is a test product 2", 200M, 20);
+			Console.WriteLine("[Get Customer List Count]");
+			Console.WriteLine("Expecting [3].");
+			Console.WriteLine($"Got [{customerList.Count}].");
+		}
 
-            Console.WriteLine("Testing product list add.");
-            Console.WriteLine("BEFORE Count.  Expecting 0. " + list.Count);
-            list.Add(p1);
-            Console.WriteLine("AFTER Add Count.  Expecting 1. " + list.Count);
-            Console.WriteLine("ToString.  Expect one product " + list.ToString());
-            list += p2;
-            Console.WriteLine("AFTER Second Add Count.  Expecting 2. " + list.Count);
-            Console.WriteLine("ToString.  Expect two products " + list.ToString());
-            Console.WriteLine();
-        }
+		static void GetCustomerAtIndex() {
+			Customer customer1 = new(1, "fake1@gmail.com", "john1", "smith1", "541-123-123");
+			Customer customer2 = new(2, "fake2@gmail.com", "john2", "smith2", "541-456-456");
+			Customer customer3 = new(3, "fake3@gmail.com", "john3", "smith3", "541-789-789");
+			CustomerList customerList = new();
 
-        static void TestProductListSaveAndFill()
-        {
-            ProductList list = new ProductList();
-            Product p1 = new Product(1, "T100", "This is a test product", 100M, 10);
-            Product p2 = new Product(2, "T200", "This is a test product 2", 200M, 20);
-            list.Add(p1);
-            list += p2;
-            list.Save();
+			customerList.Add(customer1);
+			customerList.Add(customer2);
+			customerList.Add(customer3);
 
-            list = new ProductList();
-            list.Fill();
-            Console.WriteLine("Testing product list save and fill.");
-            Console.WriteLine("After Fill Count.  Expecting 2. " + list.Count);
-            Console.WriteLine("ToString.  Expect two products " + list.ToString());
-            Console.WriteLine();
-        }
+			Console.WriteLine("[Get Customer At Index]");
+			Console.WriteLine("Expecting [Id: 2 Email: fake2@gmail.com FirstName: john2 LastName: smith2 Phone: 541-456-456].");
+			Console.WriteLine($"Got [{customerList[1]}].");
+		}
 
-        static void TestProductEquals()
-        {
-            // these 2 objects should be equal.  They reference the same object.
-            Product p1 = new Product(1, "T100", "This is a test product", 100M, 10);
-            Product p1Reference = p1;
-            // these 2 objects should be equal after overridding Equals.  The attribute values are all equal.
-            Product p2 = new Product(1, "T100", "This is a test product", 100M, 10);
+		static void ChangeCustomerAtIndex() {
+			Customer customer1 = new(1, "fake1@gmail.com", "john1", "smith1", "541-123-123");
+			Customer customer2 = new(2, "fake2@gmail.com", "john2", "smith2", "541-456-456");
+			Customer customer3 = new(3, "fake3@gmail.com", "john3", "smith3", "541-789-789");
+			CustomerList customerList = new();
 
-            Console.WriteLine("Testing product equals.");
-            Console.WriteLine("2 references to the same object.  Expecting true. " + p1.Equals(p1Reference));
-            Console.WriteLine("2 object that have the same properties should be equal.  Expecting true. " + p1.Equals(p2));
-            Console.WriteLine();
+			customerList.Add(customer1);
+			customerList.Add(customer2);
+			customerList.Add(customer3);
 
-        }
+			customerList[0].Id = 1234;
+			customerList[0].Email = "someone@gmail.com";
+			customerList[0].FirstName = "jane";
+			customerList[0].LastName = "smith";
+			customerList[0].Phone = "911-911-911";
 
-        static void TestProductListRemove()
-        {
-            // test fails before I add equals to product
-            ProductList list = new ProductList();
-            Product p1 = new Product(1, "T100", "This is a test product", 100M, 10);
+			Console.WriteLine("[Change Customer At Index]");
+			Console.WriteLine("Expecting [Id: 1234 Email: someone@gmail.com FirstName: jane LastName: smith Phone: 911-911-911].");
+			Console.WriteLine($"Got [{customerList[0]}].");
+		}
 
-            list.Fill();
-            Console.WriteLine("Testing product list remove.");
-            Console.WriteLine("Before remove Count.  Expecting 2. " + list.Count);
-            Console.WriteLine("ToString.  Expect two products " + list.ToString());
-            list.Remove(p1);
-            Console.WriteLine("After remove Count.  Expecting 1. " + list.Count);
-            Console.WriteLine("ToString.  Expect just product 2 " + list.ToString());
-            Console.WriteLine();
-        }
+		static void GetCustomerFromEmail() {
+			Customer customer1 = new(1, "fake1@gmail.com", "john1", "smith1", "541-123-123");
+			Customer customer2 = new(2, "fake2@gmail.com", "john2", "smith2", "541-456-456");
+			Customer customer3 = new(3, "fake3@gmail.com", "john3", "smith3", "541-789-789");
+			CustomerList customerList = new();
 
-        static void TestProductGetHashCode()
-        {
-            Product p1 = new Product(1, "T100", "This is a test product", 100M, 10);
-            // these 2 objects should have the same hashcode.  The attribute values are all equal.
-            Product p2 = new Product(1, "T100", "This is a test product", 100M, 10);
-            // this one should have a unique hashcode
-            Product p3 = new Product(3, "T300", "This is a test product 3", 300M, 30);
+			customerList.Add(customer1);
+			customerList.Add(customer2);
+			customerList.Add(customer3);
 
-            Console.WriteLine("Testing product GetHashCode");
-            Console.WriteLine("2 object that have the same properties should have the same hashcode.  Expecting true. " + (p1.GetHashCode() == p2.GetHashCode()));
-            Console.WriteLine("2 object that have different properties should have different hashcodes.  Expecting false. " + (p1.GetHashCode() == p3.GetHashCode()));
+			Console.WriteLine("[Get Customer From Email]");
+			Console.WriteLine("Expecting [Id: 2 Email: fake2@gmail.com FirstName: john2 LastName: smith2 Phone: 541-456-456]].");
 
-            // this will fail before overriding GetHashCode
-            HashSet<Product> set = new HashSet<Product>();
-            set.Add(p1);
-            set.Add(p3);
-            Console.WriteLine("Testing product GetHashCode by using a hash set");
-            Console.WriteLine("The hash set should be able to find an object with the same attributes.  Expecting true. " + set.Contains(p2));
+			for (var i = 0; i < customerList.Count; i++) if (customerList[i].Email == "fake2@gmail.com") {
+					Console.WriteLine($"Got [{customerList[i]}].");
+					return;
+				}
 
-            Console.WriteLine();
-        }
+			Console.WriteLine("Got [].");
+		}
 
-        static void TestProductEqualityOperator()
-        {
-            // these 2 objects should be equal.  They reference the same object.
-            Product p1 = new Product(1, "T100", "This is a test product", 100M, 10);
-            Product p1Reference = p1;
-            // these 2 objects should be equal after overridding Equals.  The attribute values are all equal.
-            Product p2 = new Product(1, "T100", "This is a test product", 100M, 10);
+		static void AddCustomerToList() {
+			Customer customer1 = new(1, "fake1@gmail.com", "john1", "smith1", "541-123-123");
+			CustomerList customerList = new();
 
-            Console.WriteLine("Testing product ==");
-            Console.WriteLine("2 references to the same object.  Expecting true. " + (p1 == p1Reference));
-            Console.WriteLine("2 object that have the same properties should be equal.  Expecting true. " + (p1 == p2));
-            Console.WriteLine();
-        }
+			customerList.Add(customer1);
 
-        static void TestProductInequalityOperator()
-        {
-            // these 2 objects should be equal after overridding Equals.  The attribute values are all equal.
-            Product p1 = new Product(1, "T100", "This is a test product", 100M, 10);
-            Product p2 = new Product(1, "T100", "This is a test product", 100M, 10);
-            // this one should not be equal
-            Product p3 = new Product(3, "T300", "This is a test product 3", 300M, 30);
+			Console.WriteLine("[Add Customer To List]");
+			Console.WriteLine("Expecting [Id: 1 Email: fake1@gmail.com FirstName: john1 LastName: smith1 Phone: 541-123-123].");
+			Console.WriteLine($"Got [{customerList[0]}].");
+		}
 
-            Console.WriteLine("Testing product !=");
-            Console.WriteLine("2 objects that have the same properties should be equal.  Expecting false. " + (p1 != p2));
-            Console.WriteLine("2 objecst that have different properties should not be equal.  Expecting true. " + (p1 != p3));
-            Console.WriteLine();
-        }
+		static void AddCustomerWithIndividualAttributes() {
+			Customer customer1 = new(1, "fake1@gmail.com", "john1", "smith1", "541-123-123");
+			Customer customer2 = new(2, "fake2@gmail.com", "john2", "smith2", "541-456-456");
+			Customer customer3 = new(3, "fake3@gmail.com", "john3", "smith3", "541-789-789");
+			CustomerList customerList = new();
 
-        static void TestProductListIndexer()
-        {
-            // test fails before I add equals to product
-            ProductList list = new ProductList();
-            list.Fill();
+			customerList.Add(customer1);
+			customerList.Add(customer2);
+			customerList.Add(customer3);
 
-            Console.WriteLine("Testing product list indexer");
-            Console.WriteLine("Index 1.  Expecting first product in list to be T100 \n" + list[0]);
-            Console.WriteLine("Index 'T200'.  Expecting product with code of T200 \n" + list["T200"]);
-            Console.WriteLine();
-        }
-    }
+			customerList[0].Id = 1234;
+			customerList[0].Email = "someone@gmail.com";
+			customerList[0].FirstName = "jane";
+			customerList[0].LastName = "smith";
+			customerList[0].Phone = "911-911-911";
+
+			Console.WriteLine("[Add Customer With Individual Attributes]");
+			Console.WriteLine("Expecting [Id: 1234 Email: someone@gmail.com FirstName: jane LastName: smith Phone: 911-911-911].");
+			Console.WriteLine($"Got [{customerList[0]}].");
+		}
+
+		static void AddCustomerOperatorPlus() {
+			CustomerList customerList = new();
+			Customer customer1 = new(1, "fake1@gmail.com", "john1", "smith1", "541-123-123");
+
+			customerList += customer1;
+
+			Console.WriteLine("[Add Customer Operator Plus]");
+			Console.WriteLine("Expecting [Id: 1 Email: fake1@gmail.com FirstName: john1 LastName: smith1 Phone: 541-123-123].");
+			Console.WriteLine($"Got [{customerList}].");
+		}
+
+		static void SaveCustomers() {
+			Customer customer1 = new(1, "fake1@gmail.com", "john1", "smith1", "541-123-123");
+			Customer customer2 = new(2, "fake2@gmail.com", "john2", "smith2", "541-456-456");
+			Customer customer3 = new(3, "fake3@gmail.com", "john3", "smith3", "541-789-789");
+			CustomerList customerList = new();
+
+			customerList.Add(customer1);
+			customerList.Add(customer2);
+			customerList.Add(customer3);
+
+			Console.WriteLine("[Save Customers]");
+
+			customerList.Save();
+
+			Console.WriteLine("Successfully saved customers to a local XML file.");
+		}
+
+		static void LoadCustomers() {
+			CustomerList customerList = new();
+
+			customerList.Fill();
+
+			Console.WriteLine("[Load Customers]");
+			Console.WriteLine("Expecting [Id: 1 Email: fake1@gmail.com FirstName: john1 LastName: smith1 Phone: 541-123-123\nId: 2 Email: fake2@gmail.com FirstName: john2 LastName: smith2 Phone: 541-456-456\nId: 3 Email: fake3@gmail.com FirstName: john3 LastName: smith3 Phone: 541-789-789].");
+			Console.WriteLine($"Got [{customerList}].");
+		}
+
+		static void RemoveCustomer() {
+			Customer customer1 = new(1, "fake1@gmail.com", "john1", "smith1", "541-123-123");
+			CustomerList customerList = new();
+
+			customerList.Add(customer1);
+			customerList.Remove(customerList[0]);
+
+			Console.WriteLine("[Remove Customer]");
+			Console.WriteLine("Expecting [].");
+			Console.WriteLine($"Got [{customerList}].");
+		}
+
+		static void RemoveCustomerOperatorMinus() {
+			CustomerList customerList = new();
+			Customer customer1 = new(1, "fake1@gmail.com", "john1", "smith1", "541-123-123");
+
+			customerList.Add(customer1);
+			customerList -= customer1;
+
+			Console.WriteLine("[Remove Customer Operator Negative]");
+			Console.WriteLine("Expecting [].");
+			Console.WriteLine($"Got [{customerList}].");
+		}
+
+		static void DisplayCustomerAttributes() {
+			Customer customer1 = new(1, "fake1@gmail.com", "john1", "smith1", "541-123-123");
+			Customer customer2 = new(2, "fake2@gmail.com", "john2", "smith2", "541-456-456");
+			Customer customer3 = new(3, "fake3@gmail.com", "john3", "smith3", "541-789-789");
+			CustomerList customerList = new();
+
+			customerList.Add(customer1);
+			customerList.Add(customer2);
+			customerList.Add(customer3);
+
+			Console.WriteLine("[Display Custom Attributes]");
+			Console.WriteLine("Expecting [Id: 1 Email: fake1@gmail.com FirstName: john1 LastName: smith1 Phone: 541-123-123\nId: 2 Email: fake2@gmail.com FirstName: john2 LastName: smith2 Phone: 541-456-456\nId: 3 Email: fake3@gmail.com FirstName: john3 LastName: smith3 Phone: 541-789-789].");
+			Console.Write("Got [");
+			for (var i = 0; i < customerList.GetType().GetProperties().Length; i++) Console.WriteLine($"{customerList[i]}");
+			Console.WriteLine("].");
+		}
+	}
 }
